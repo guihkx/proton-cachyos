@@ -1371,7 +1371,8 @@ $(eval $(call rules-meson,dxvk-sarek,i386,windows))
 $(eval $(call rules-meson,dxvk-sarek,x86_64,windows))
 $(eval $(call rules-meson,dxvk-sarek,arm64ec,windows))
 
-$(OBJ)/.dxvk-sarek-post-source:
+$(OBJ)/.dxvk-sarek-post-source: patches-source
+	$(foreach p,$(shell find $(PATCHES_SRC)/dxvk-sarek/ -name "*.patch" | sort),patch -d $(DXVK_SAREK_SRC) -Np1 -i $(p) &&) true
 	sed -re 's#@VCS_TAG@#$(shell git -C $(SRCDIR)/dxvk-sarek describe --always --abbrev=15 --dirty=0)#' \
 	    $(SRCDIR)/dxvk-sarek/version.h.in > $(DXVK_SAREK_SRC)/version.h.in
 	mkdir -p $(DST_LIBDIR)/wine/dxvk-sarek
